@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aditya's Car Price Predictor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Replace with a link to a dark background image */
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        .navbar {
+            width: 100%;
+            background-color: #1e1e1e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .navbar img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .navbar h1 {
+            margin: 0;
+            color: #ffffff;
+        }
+        .navbar .social-icons {
+            display: flex;
+            align-items: center;
+        }
+        .social-icons a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .container, .details-container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 10px 20px; /* Increased margin here */
+        }
+        .container {
+            width: 400px;
+        }
+        .container h1, .details-container h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #bbbbbb;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #333333;
+            color: #ffffff;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .details-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 400px;
+        }
+        .details-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .details-container p {
+            margin: 0;
+            color: #bbbbbb;
+        }
+        .equation {
+            margin-top: 20px;
+            color: #ffffff;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div>
+        <h1>- Aditya's Car Price Predictor -</h1>
+    </div>
+    <div class="social-icons">
+        <a href="https://www.linkedin.com/in/adityakumar2005/"><img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn"></a>
+        <a href="https://github.com/Edityaa"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/github.png" alt="GitHub"></a>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <h1>Car Price Predictor Using Multiple Linear Regression [Ordinary Least Squares]</h1>
+        <div class="form-group">
+            <label for="car-brand">Car Brand:</label>
+            <select id="car-brand">
+                <option value="">Select a brand</option>
+                {% for brand in car_data.keys() %}
+                    <option value="{{ brand }}">{{ brand.capitalize() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="car-model">Car Model:</label>
+            <select id="car-model">
+                <option value="">Select a model</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="transmission">Transmission Type:</label>
+            <select id="transmission">
+                <option value="">Select a transmission</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="year">Model Year:</label>
+            <select id="year">
+                <option value="">Select a year</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fuel-type">Fuel Type:</label>
+            <select id="fuel-type">
+                <option value="">Select a fuel type</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="owner-type">Owner Type:</label>
+            <select id="owner-type">
+                <option value="">Select an owner type</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="kilometers-driven">Kilometers Driven:</label>
+            <input type="number" id="kilometers-driven" placeholder="Enter kilometers">
+        </div>
+        <button class="submit-btn" onclick="submitForm()">Submit</button>
+    </div>
+
+
+</div>
+  <div class="details-container" id="details-container">
+        <h2>Car Details</h2>
+        <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Car Image" id="car-image">
+        <p id="car-details">Car details will be displayed here.</p>
+        <div class="equation" id="equation"></div>
+    </div>
+
+<script>
+    const carData = {{ car_data | tojson }};
+
+    document.getElementById('car-brand').addEventListener('change', function() {
+        const brand = this.value;
+        const modelSelect = document.getElementById('car-model');
+        modelSelect.innerHTML = '<option value="">Select a model</option>'; // Clear previous options
+
+        if (brand && carData[brand]) {
+            for (const model in carData[brand]) {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            }
+        }
+
+        clearDependentFields();
+    });
+
+    document.getElementById('car-model').addEventListener('change', function() {
+        const brand = document.getElementById('car-brand').value;
+        const model = this.value;
+
+        if (brand && model && carData[brand][model]) {
+            const transmissionSelect = document.getElementById('transmission');
+            const yearSelect = document.getElementById('year');
+            const fuelTypeSelect = document.getElementById('fuel-type');
+            const ownerTypeSelect = document.getElementById('owner-type');
+
+            updateSelectOptions(transmissionSelect, carData[brand][model].transmission);
+            updateSelectOptions(yearSelect, carData[brand][model].years);
+            updateSelectOptions(fuelTypeSelect, carData[brand][model].fuel_types);
+            updateSelectOptions(ownerTypeSelect, carData[brand][model].owner_types);
+        } else {
+            clearDependentFields();
+        }
+    });
+
+    function updateSelectOptions(selectElement, optionsArray) {
+        selectElement.innerHTML = '<option value="">Select an option</option>';
+        optionsArray.forEach(option => {
+            const optElement = document.createElement('option');
+            optElement.value = option.toLowerCase();
+            optElement.textContent = option;
+            selectElement.appendChild(optElement);
+        });
+    }
+
+    function clearDependentFields() {
+        updateSelectOptions(document.getElementById('transmission'), []);
+        updateSelectOptions(document.getElementById('year'), []);
+        updateSelectOptions(document.getElementById('fuel-type'), []);
+        updateSelectOptions(document.getElementById('owner-type'), []);
+    }
+
+    function submitForm() {
+        const brand = document.getElementById('car-brand').value;
+        const model = document.getElementById('car-model').value;
+        const kilometers = document.getElementById('kilometers-driven').value;
+        const transmission = document.getElementById('transmission').value;
+        const year = document.getElementById('year').value;
+        const fuelType = document.getElementById('fuel-type').value;
+        const ownerType = document.getElementById('owner-type').value;
+
+        if (!brand || !model || !kilometers || !transmission || !year || !fuelType || !ownerType) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        const formData = {
+            brand: brand,
+            model: model,
+            kilometers: kilometers,
+            transmission: transmission,
+            year: year,
+            fuel_type: fuelType,
+            owner_type: ownerType
+        };
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('car-details').textContent = `Brand: ${data.brand}, Model: ${data.model}, Price: ${data.price}`;
+            document.getElementById('equation').textContent = `Price = ${data.equation}`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
