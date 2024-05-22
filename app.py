@@ -14,39 +14,42 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    brand = data.get('brand')
-    model = data.get('model')
-    kilometers = data.get('kilometers')
-    transmission = data.get('transmission')
-    year = data.get('year')
-    fuel_type = data.get('fuel_type')
-    owner_type = data.get('owner_type')
-
-
-    temp = ''
-    for word in owner_type.split():
-        temp +=' '
-        temp+= word.capitalize()
-    temp = temp.strip()
-    owner_type = temp
-
-    ls = [model, int(year), int(kilometers), fuel_type.capitalize(), 'Individual', transmission.capitalize(), owner_type, brand]
-    pred = pipe.predict(pd.DataFrame([ls],columns=['name', 'year', 'km_driven', 'fuel', 'seller_type',
-                                                  'transmission','owner', 'Brand']))
-
-    # print(pred)
-    if pred[0] < 0 :
-        pred[0] = 0
-
-    # Dummy response for demonstration
-    response_data = {
-        'brand': brand,
-        'model': model,
-        'price': '₹ ' + str(np.round(pred[0])),  # Dummy price
-        'imageURL': 'https://via.placeholder.com/300x200',  # Dummy image URL
-        'equation': '₹ ' +str(np.round(pred[0])),  # Dummy equation
-    }
+    try:
+        data = request.json
+        brand = data.get('brand')
+        model = data.get('model')
+        kilometers = data.get('kilometers')
+        transmission = data.get('transmission')
+        year = data.get('year')
+        fuel_type = data.get('fuel_type')
+        owner_type = data.get('owner_type')
+    
+    
+        temp = ''
+        for word in owner_type.split():
+            temp +=' '
+            temp+= word.capitalize()
+        temp = temp.strip()
+        owner_type = temp
+    
+        ls = [model, int(year), int(kilometers), fuel_type.capitalize(), 'Individual', transmission.capitalize(), owner_type, brand]
+        pred = pipe.predict(pd.DataFrame([ls],columns=['name', 'year', 'km_driven', 'fuel', 'seller_type',
+                                                      'transmission','owner', 'Brand']))
+    
+        # print(pred)
+        if pred[0] < 0 :
+            pred[0] = 0
+    
+        # Dummy response for demonstration
+        response_data = {
+            'brand': brand,
+            'model': model,
+            'price': '₹ ' + str(np.round(pred[0])),  # Dummy price
+            'imageURL': 'https://via.placeholder.com/300x200',  # Dummy image URL
+            'equation': '₹ ' +str(np.round(pred[0])),  # Dummy equation
+        }
+    except Exception as e:
+        print(e)
     return jsonify((response_data))
 def mapper(df):
     map = {}
