@@ -5,7 +5,7 @@ import pickle
 
 app = Flask(__name__)
 df = pd.read_csv('Final_data.csv')
-# pipe = pickle.load(open('model.pkl','rb'))
+pipe = pickle.load(open('model.pkl','rb'))
 
 # Sample data for car brands, models, and additional attributes
 car_data = {
