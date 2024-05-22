@@ -277,7 +277,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('car-details').textContent = `NOTE- The dataset was 2-3 years old so the prices may varyor lag behind. Brand: ${data.brand}, Model: ${data.model}, Price: ${data.price}`;
+            document.getElementById('car-details').textContent = `NOTE - The dataset was 2-3 years old so the prices may varyor lag behind || Brand: ${data.brand}, Model: ${data.model}, Price: ${data.price}`;
             document.getElementById('equation').textContent = `Price = ${data.equation}`;
         })
         .catch(error => {
