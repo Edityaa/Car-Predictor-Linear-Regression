@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the requirements.txt file into the container at /app
-COPY requirements.txt 
+COPY requirements.txt /app/requirements.txt
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -18,6 +18,7 @@ EXPOSE 5000
 
 # Define environment variable for Flask
 ENV FLASK_APP=app.py
+
 # Command to run the Flask app
 CMD ["flask", "run", "--host=0.0.0.0"]
 
