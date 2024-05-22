@@ -7,50 +7,6 @@ app = Flask(__name__)
 df = pd.read_csv('Final_data.csv')
 pipe = pickle.load(open('model.pkl','rb'))
 
-# Sample data for car brands, models, and additional attributes
-car_data = {
-    'toyota': {
-        'Corolla': {
-            'transmission': ['Manual', 'Automatic'],
-            'years': [2018, 2019, 2020],
-            'fuel_types': ['Petrol', 'Diesel'],
-            'owner_types': ['First', 'Second', 'Third']
-        },
-        'Camry': {
-            'transmission': ['Automatic'],
-            'years': [2017, 2018, 2019],
-            'fuel_types': ['Petrol'],
-            'owner_types': ['First', 'Second']
-        },
-        'RAV4': {
-            'transmission': ['Manual', 'Automatic'],
-            'years': [2019, 2020, 2021],
-            'fuel_types': ['Petrol', 'Diesel', 'Hybrid'],
-            'owner_types': ['First', 'Second', 'Third', 'Fourth']
-        }
-    },
-    'honda': {
-        'Civic': {
-            'transmission': ['Manual', 'Automatic'],
-            'years': [2016, 2017, 2018],
-            'fuel_types': ['Petrol', 'Diesel'],
-            'owner_types': ['First', 'Second']
-        },
-        'Accord': {
-            'transmission': ['Automatic'],
-            'years': [2015, 2016, 2017],
-            'fuel_types': ['Petrol', 'Hybrid'],
-            'owner_types': ['First', 'Second', 'Third']
-        },
-        'CR-V': {
-            'transmission': ['Manual', 'Automatic'],
-            'years': [2018, 2019, 2020],
-            'fuel_types': ['Petrol', 'Diesel'],
-            'owner_types': ['First', 'Second', 'Third']
-        }
-    },
-    # Add more car brands and models as needed
-}
 
 @app.route('/')
 def index():
@@ -113,5 +69,8 @@ def mapper(df):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
 
 
